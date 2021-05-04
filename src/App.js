@@ -1,16 +1,20 @@
 import { BrowserRouter as Router } from 'react-router-dom';
-import { TopBar } from './components/topBar';
 
+import { CurrentUserChecker } from './components/currentUserChecker';
+import { TopBar } from './components/topBar';
+import { CurrentUserProvider } from './context/currentUser';
 import { Routes } from './pages/routes';
 
 function App() {
   return (
-    <div>
-      <Router>
-        <TopBar />
-        <Routes />
-      </Router>
-    </div>
+    <CurrentUserProvider>
+      <CurrentUserChecker>
+        <Router>
+          <TopBar />
+          <Routes />
+        </Router>
+      </CurrentUserChecker>
+    </CurrentUserProvider>
   );
 }
 

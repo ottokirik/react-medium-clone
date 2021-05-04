@@ -1,6 +1,10 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useContext, useEffect, useState } from 'react';
+import { Link, Redirect } from 'react-router-dom';
+
+import { BackendErrorMessages } from '../../components/backendErrorMessage';
+import { CurrentUserContext } from '../../context/currentUser';
 import { useFetch } from '../../hooks/useFetch';
+import { useLocalStorage } from '../../hooks/useLocalStorage';
 
 const pageContent = (page) => {
   const content = {
@@ -21,15 +25,35 @@ const pageContent = (page) => {
   return content[page];
 };
 
+// match передается из router
 export const Authentication = ({ match: { path } }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
+  const [isSuccessfullSubmit, setIsSuccessfullSubmit] = useState(false);
   const isLogin = path === '/login';
   const { pageTitle, descriptionLink, descriptionText, apiUrl } = pageContent(
     path
   );
+
   const [{ isLoading, response, error }, doFetch] = useFetch(apiUrl);
+  const [, setToken] = useLocalStorage('token');
+  const [, setCurrentUserState] = useContext(CurrentUserContext);
+
+  useEffect(() => {
+    if (!response) {
+      return;
+    }
+
+    setToken(response.user.token);
+    setIsSuccessfullSubmit(true);
+    setCurrentUserState((state) => ({
+      ...state,
+      isLoggedIn: true,
+      isLoading: false,
+      currentUser: response.user,
+    }));
+  }, [response, setToken, setCurrentUserState]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -42,6 +66,10 @@ export const Authentication = ({ match: { path } }) => {
     });
   };
 
+  if (isSuccessfullSubmit) {
+    return <Redirect to="/" />;
+  }
+
   return (
     <div className="auth-page">
       <div className="container page">
@@ -51,6 +79,7 @@ export const Authentication = ({ match: { path } }) => {
             <Link to={descriptionLink}>{descriptionText}</Link>
           </p>
           <form onSubmit={handleSubmit}>
+            {error && <BackendErrorMessages backendErrors={error.errors} />}
             <fieldset>
               {!isLogin && (
                 <fieldset className="form-group">
