@@ -1,10 +1,10 @@
 import { useContext, useEffect, useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 
-import { BackendErrorMessages } from '../../components/backendErrorMessage';
-import { CurrentUserContext } from '../../context/currentUser';
-import { useFetch } from '../../hooks/useFetch';
-import { useLocalStorage } from '../../hooks/useLocalStorage';
+import { BackendErrorMessages } from 'components/backendErrorMessage';
+import { CurrentUserContext } from 'context/currentUser';
+import { useFetch } from 'hooks/useFetch';
+import { useLocalStorage } from 'hooks/useLocalStorage';
 
 const pageContent = (page) => {
   const content = {
