@@ -1,8 +1,8 @@
 import { useFetch } from 'hooks/useFetch';
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ErrorMessage } from './errorMessage';
-import { Loading } from './loading';
+import { ErrorMessage } from 'components/errorMessage';
+import { Loading } from 'components/loading';
 
 const PopularTags = () => {
   const [{ response, isLoading, error }, doFetch] = useFetch('/tags');

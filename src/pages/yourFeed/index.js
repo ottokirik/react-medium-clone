@@ -10,13 +10,13 @@ import { Loading } from 'components/loading';
 import { ErrorMessage } from 'components/errorMessage';
 import { FeedToggler } from 'components/feedToggler';
 
-export const GlobalFeed = ({ location, match: { url } }) => {
+export const YourFeed = ({ location, match: { url } }) => {
   const { currentPage, offset } = getPaginator(location.search);
   const stringifiedParams = stringify({
     limit,
     offset,
   });
-  const apiUrl = `/articles?${stringifiedParams}`;
+  const apiUrl = `/articles/feed?${stringifiedParams}`;
   const [{ response, isLoading, error }, doFetch] = useFetch(apiUrl);
 
   useEffect(() => {
