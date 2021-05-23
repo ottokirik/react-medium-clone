@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 
 import { BackendErrorMessages } from 'components/backendErrorMessage';
-import { CurrentUserContext } from 'context/currentUser';
+import { CurrentUserContext, setAuthorized } from 'context/currentUser';
 import { useFetch } from 'hooks/useFetch';
 import { useLocalStorage } from 'hooks/useLocalStorage';
 
@@ -32,13 +32,11 @@ export const Authentication = ({ match: { path } }) => {
   const [username, setUsername] = useState('');
   const [isSuccessfullSubmit, setIsSuccessfullSubmit] = useState(false);
   const isLogin = path === '/login';
-  const { pageTitle, descriptionLink, descriptionText, apiUrl } = pageContent(
-    path
-  );
+  const { pageTitle, descriptionLink, descriptionText, apiUrl } = pageContent(path);
 
   const [{ isLoading, response, error }, doFetch] = useFetch(apiUrl);
   const [, setToken] = useLocalStorage('token');
-  const [, setCurrentUserState] = useContext(CurrentUserContext);
+  const [, disatch] = useContext(CurrentUserContext);
 
   useEffect(() => {
     if (!response) {
@@ -47,13 +45,8 @@ export const Authentication = ({ match: { path } }) => {
 
     setToken(response.user.token);
     setIsSuccessfullSubmit(true);
-    setCurrentUserState((state) => ({
-      ...state,
-      isLoggedIn: true,
-      isLoading: false,
-      currentUser: response.user,
-    }));
-  }, [response, setToken, setCurrentUserState]);
+    disatch(setAuthorized(response.user));
+  }, [response, setToken, disatch]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
