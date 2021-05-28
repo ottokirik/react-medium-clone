@@ -5,6 +5,7 @@ import { Article } from 'pages/article';
 import { Authentication } from 'pages/authentication';
 import { TagFeed } from 'pages/tagFeed';
 import { YourFeed } from 'pages/yourFeed';
+import { CreateArticle } from 'pages/createArticle';
 
 export const Routes = () => {
   return (
@@ -14,6 +15,7 @@ export const Routes = () => {
       <Route path="/feed" component={YourFeed} />
       <Route path="/login" component={Authentication} />
       <Route path="/register" component={Authentication} />
+      <Route path="/articles/new" component={CreateArticle} />
       <Route path="/articles/:slug" component={Article} />
     </Switch>
   );
