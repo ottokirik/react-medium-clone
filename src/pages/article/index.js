@@ -1,9 +1,10 @@
 import { ErrorMessage } from 'components/errorMessage';
 import { Loading } from 'components/loading';
 import { TagList } from 'components/tagList';
+import { CurrentUserContext } from 'context/currentUser';
 import { useFetch } from 'hooks/useFetch';
-import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useContext, useEffect, useState } from 'react';
+import { Link, Redirect } from 'react-router-dom';
 
 export const Article = ({
   match: {
@@ -12,10 +13,32 @@ export const Article = ({
 }) => {
   const apiUrl = `/articles/${slug}`;
   const [{ response, error, isLoading }, doFetch] = useFetch(apiUrl);
+  const [{ response: deleteArticleResponse }, doDeleteArticle] = useFetch(apiUrl);
+
+  const [{ isLoggedIn, currentUser }] = useContext(CurrentUserContext);
+  const [isSuccessfullDelete, setIsSuccessfullDelete] = useState(false);
+
+  const isAuthor = () => {
+    if (!response || !isLoggedIn) return false;
+    return response.article.author.username === currentUser.username;
+  };
+
+  const deleteArticle = () => {
+    doDeleteArticle({
+      method: 'delete',
+    });
+  };
 
   useEffect(() => {
     doFetch();
   }, [doFetch]);
+
+  useEffect(() => {
+    if (!deleteArticleResponse) return;
+    setIsSuccessfullDelete(true);
+  }, [deleteArticleResponse]);
+
+  if (isSuccessfullDelete) return <Redirect to="/" />;
 
   return (
     <div className="article-page">
@@ -33,6 +56,16 @@ export const Article = ({
                 </Link>
                 <span className="date">{response.article.createdAt}</span>
               </div>
+              {isAuthor() && (
+                <span>
+                  <Link className="btn btn-outline-secondary btn-sm" to={`/articles/${slug}/edit`}>
+                    <i className="ion-edit"></i>Edit Atricle
+                  </Link>
+                  <button className="btn btn-outline-danger btn-sm" onClick={deleteArticle}>
+                    <i className="ion-trash"></i>Delete Article
+                  </button>
+                </span>
+              )}
             </div>
           </div>
         )}
