@@ -23,7 +23,7 @@ const CreateArticle = () => {
     });
   };
 
-  if (!isLoggedIn) {
+  if (isLoggedIn === false) {
     return <Redirect to="/" />;
   }
 
