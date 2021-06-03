@@ -1,5 +1,5 @@
 import { BackendErrorMessages } from 'components/backendErrorMessage';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const ArticleForm = ({ onSubmit, errors, initialValues }) => {
   const [title, setTitle] = useState('');
@@ -7,9 +7,18 @@ const ArticleForm = ({ onSubmit, errors, initialValues }) => {
   const [description, setDescription] = useState('');
   const [tagList, setTagList] = useState('');
 
+  useEffect(() => {
+    if (!initialValues) return;
+    const { title, description, body, tagList } = initialValues;
+    setTitle(title);
+    setDescription(description);
+    setBody(body);
+    setTagList(tagList.join(' '));
+  }, [initialValues]);
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    onSubmit({});
+    onSubmit({ title, description, body, tagList });
   };
 
   return (

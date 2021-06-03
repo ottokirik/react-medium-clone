@@ -36,7 +36,7 @@ export const Authentication = ({ match: { path } }) => {
 
   const [{ isLoading, response, error }, doFetch] = useFetch(apiUrl);
   const [, setToken] = useLocalStorage('token');
-  const [, disatch] = useContext(CurrentUserContext);
+  const [, dispatch] = useContext(CurrentUserContext);
 
   useEffect(() => {
     if (!response) {
@@ -45,8 +45,8 @@ export const Authentication = ({ match: { path } }) => {
 
     setToken(response.user.token);
     setIsSuccessfullSubmit(true);
-    disatch(setAuthorized(response.user));
-  }, [response, setToken, disatch]);
+    dispatch(setAuthorized(response.user));
+  }, [response, setToken, dispatch]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -72,7 +72,7 @@ export const Authentication = ({ match: { path } }) => {
             <Link to={descriptionLink}>{descriptionText}</Link>
           </p>
           <form onSubmit={handleSubmit}>
-            {error && <BackendErrorMessages backendErrors={error.errors} />}
+            {error && <BackendErrorMessages backendErrors={error.errors || {}} />}
             <fieldset>
               {!isLogin && (
                 <fieldset className="form-group">

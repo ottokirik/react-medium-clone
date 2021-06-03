@@ -1,11 +1,43 @@
 import { ArticleForm } from 'components/articleForm';
+import { CurrentUserContext } from 'context/currentUser';
+import { useFetch } from 'hooks/useFetch';
+import { useContext, useEffect, useState } from 'react';
+import { Redirect } from 'react-router-dom';
 
 const CreateArticle = () => {
-  const errors = {};
-  const initialValues = {};
-  const handleSubmit = () => {};
+  const apiUrl = '/articles';
+  const [{ response, error }, doFetch] = useFetch(apiUrl);
+  const [{ isLoggedIn }] = useContext(CurrentUserContext);
+  const initialValues = { title: '', description: '', body: '', tagList: [] };
+  const [isSuccessfullsubmit, setIsSuccessfullSubmit] = useState(false);
 
-  return <ArticleForm errors={errors} initialValues={initialValues} onSubmit={handleSubmit} />;
+  useEffect(() => {
+    if (!response) return;
+    setIsSuccessfullSubmit(true);
+  }, [response, setIsSuccessfullSubmit]);
+
+  const handleSubmit = (article) => {
+    doFetch({
+      method: 'post',
+      data: { article },
+    });
+  };
+
+  if (!isLoggedIn) {
+    return <Redirect to="/" />;
+  }
+
+  if (isSuccessfullsubmit) {
+    return <Redirect to={`/articles/${response.article.slug}`} />;
+  }
+
+  return (
+    <ArticleForm
+      errors={(error && error.errors) || {}}
+      initialValues={initialValues}
+      onSubmit={handleSubmit}
+    />
+  );
 };
 
 export { CreateArticle };

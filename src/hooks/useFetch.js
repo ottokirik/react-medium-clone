@@ -33,6 +33,7 @@ const useFetch = (url) => {
       })
       .catch((err) => {
         setIsLoading(false);
+
         setError(err);
       });
   }, [isLoading, options, url, token]);
