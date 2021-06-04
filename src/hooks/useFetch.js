@@ -34,7 +34,7 @@ const useFetch = (url) => {
       .catch((err) => {
         setIsLoading(false);
 
-        setError(err);
+        setError(err.response.data);
       });
   }, [isLoading, options, url, token]);
 
