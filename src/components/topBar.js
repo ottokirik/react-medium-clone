@@ -41,15 +41,17 @@ export const TopBar = () => {
                 </NavLink>
               </li>
               <li className="nav-item">
+                <NavLink className="nav-link" to="/settings">
+                  <i className="ion-gear-a"></i>
+                  &nbsp;Settings
+                </NavLink>
+              </li>
+              <li className="nav-item">
                 <NavLink
                   className="nav-link"
                   to={`/profiles/${currentUserState.currentUser.username}`}
                 >
-                  <img
-                    className="user-pic"
-                    src={currentUserState.currentUser.image}
-                    alt=""
-                  />
+                  <img className="user-pic" src={currentUserState.currentUser.image} alt="" />
                   &nbsp;{currentUserState.currentUser.username}
                 </NavLink>
               </li>

@@ -1,8 +1,9 @@
 import { createContext, useReducer } from 'react';
 
-export const LOADING = 'LOADING';
-export const SET_AUTHORIZED = 'SET_AUTHORIZED';
-export const SET_UNAUTHORIZED = 'SET_UNAUTHORIZED';
+const LOADING = 'LOADING';
+const SET_AUTHORIZED = 'SET_AUTHORIZED';
+const SET_UNAUTHORIZED = 'SET_UNAUTHORIZED';
+const LOGOUT = 'LOGOUT';
 
 export const loading = () => ({
   type: LOADING,
@@ -15,6 +16,10 @@ export const setAuthorized = (payload) => ({
 
 export const setUnauthorized = () => ({
   type: SET_UNAUTHORIZED,
+});
+
+export const doLogout = () => ({
+  type: LOGOUT,
 });
 
 const initialState = {
@@ -39,6 +44,9 @@ const reducer = (state, action) => {
       };
     case 'SET_UNAUTHORIZED':
       return { ...state, isLoggedIn: false };
+
+    case 'LOGOUT':
+      return { ...initialState, isLoggedIn: false };
 
     default:
       return { ...state };
