@@ -11,7 +11,6 @@ const getApiUrl = ({ username, offset, isFavorites }) => {
   const params = isFavorites
     ? { limit, offset, favorited: username }
     : { limit, offset, author: username };
-
   return `/articles?${stringify(params)}`;
 };
 
@@ -23,7 +22,7 @@ export const UserArticles = ({ username, location, url }) => {
 
   useEffect(() => {
     doFetch();
-  }, [doFetch, isFavorites]);
+  }, [doFetch, isFavorites, currentPage]);
 
   return (
     <div>
@@ -36,7 +35,7 @@ export const UserArticles = ({ username, location, url }) => {
             total={response.articlesCount}
             limit={limit}
             currentPage={currentPage}
-            url={url}
+            url={`${url}${isFavorites ? '/favorites' : ''}`}
           />
         </>
       )}
