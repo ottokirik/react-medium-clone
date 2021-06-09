@@ -17,6 +17,8 @@ const useFetch = (url) => {
   }, []);
 
   useEffect(() => {
+    let skipGetResponseAfterDestroy = false;
+
     if (!isLoading) {
       return;
     }
@@ -28,14 +30,22 @@ const useFetch = (url) => {
 
     axios(`${baseUrl}${url}`, requestOptions)
       .then((res) => {
-        setIsLoading(false);
-        setResponse(res.data);
+        if (!skipGetResponseAfterDestroy) {
+          setIsLoading(false);
+          setResponse(res.data);
+        }
       })
       .catch((err) => {
-        setIsLoading(false);
-
-        setError(err.response.data);
+        if (!skipGetResponseAfterDestroy) {
+          setError(err.response.data);
+          setIsLoading(false);
+        }
       });
+
+    return () => {
+      // Функция выполняется, когда компоенент анмаунтится
+      skipGetResponseAfterDestroy = true;
+    };
   }, [isLoading, options, url, token]);
 
   return [{ isLoading, response, error }, doFetch];

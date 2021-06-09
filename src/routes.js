@@ -8,12 +8,15 @@ import { YourFeed } from 'pages/yourFeed';
 import { CreateArticle } from 'pages/createArticle';
 import { EditArticle } from 'pages/editArticle';
 import { Settings } from 'pages/settings';
+import { UserProfile } from 'pages/userProfile';
 
 export const Routes = () => {
   return (
     <Switch>
       <Route path="/" exact component={GlobalFeed} />
       <Route path="/settings" component={Settings} />
+      <Route path="/profiles/:slug" component={UserProfile} />
+      <Route path="/profiles/:slug/favorites" component={UserProfile} />
       <Route path="/tags/:slug" component={TagFeed} />
       <Route path="/feed" component={YourFeed} />
       <Route path="/login" component={Authentication} />
